@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, Text, View, StyleSheet } from "react-native";
+import { ActivityIndicator, Alert, Button, Text, View, StyleSheet, TextInput } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function Index() {
   const [extractedText, setExtractedText] = useState('');
+  const [aiStyle, setAiStyle] = useState("zwięźle streść poniższy tekst po polsku");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Index() {
         },
         body: JSON.stringify({
           model: "mwiewior/bielik",
-          system: "streść staropolszczyzną poniższy tekst",
+          system: aiStyle,
           prompt: rawText,
           stream: false
         }),
@@ -72,10 +73,14 @@ export default function Index() {
     setIsLoading(false);
   }
 
+  const onChangeText = (value: string) => {
+    setAiStyle(value)
+  }
+
   return (
     <SafeAreaProvider>
       {isLoading ?
-        <ActivityIndicator style={styles.progressSpinner}/>
+        <ActivityIndicator style={styles.progressSpinner} />
         :
         <View
           style={{
@@ -84,6 +89,11 @@ export default function Index() {
             alignItems: "center",
           }}
         >
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={aiStyle}
+          />
           <Button title="take a photo" onPress={handleButtonClicked}></Button>
           <Text>Skrócony tekst:</Text>
           <Text>{extractedText}</Text>
@@ -96,5 +106,12 @@ export default function Index() {
 const styles = StyleSheet.create({
   progressSpinner: {
     flex: 1,
-  }
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    width: '100%',
+    borderWidth: 1,
+    padding: 10,
+  },
 });
