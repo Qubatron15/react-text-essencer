@@ -74,7 +74,7 @@ export default function Index() {
   }
 
   const onChangeText = (value: string) => {
-    setAiStyle(value)
+    setAiStyle(`${value} odpowiedz po polsku`);
   }
 
   return (
